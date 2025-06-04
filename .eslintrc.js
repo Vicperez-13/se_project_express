@@ -1,3 +1,9 @@
+/* eslint-disable */
+
+const _id = "";
+
+/* eslint-enable */
+
 module.exports = {
   env: {
     es2021: true,
@@ -20,5 +26,7 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  rules: {},
+  rules: {
+    "no-console": ["warning", { allow: ["error"] }],
+  },
 };
