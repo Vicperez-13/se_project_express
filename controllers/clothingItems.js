@@ -1,4 +1,9 @@
 const clothingItem = require("../models/clothingItem");
+const {
+  BAD_REQUEST,
+  NOT_FOUND,
+  INTERNAL_SERVER_ERROR,
+} = require("../utils/errors");
 
 const createItem = (req, res) => {
   console.log(req);
@@ -13,7 +18,7 @@ const createItem = (req, res) => {
       res.send({ data: item });
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     });
 };
 
@@ -22,7 +27,7 @@ const getItems = (req, res) => {
     .find({})
     .then((items) => res.status(200).send(items))
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     });
 };
 
@@ -35,7 +40,7 @@ const updateItem = (req, res) => {
     .orFail()
     .then((item) => res.status(200).send({ data: item }))
     .catech((err) => {
-      res.status(500).send({ message: err.message });
+      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     });
 };
 
@@ -49,7 +54,7 @@ const deleteItem = (req, res) => {
     .orFail()
     .then((itme) => res.status(204).send({}))
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     });
 };
 
