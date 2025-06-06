@@ -1,5 +1,23 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
-const clothingItemSchema = new mongoose.Schema({});
+const clothingItemSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  weather: {
+    type: String,
+    required: true,
+  },
+  imageURL: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (v) => validator.isURL(v),
+      message: "Invalid URL format",
+    },
+  },
+});
 
-module.exports = mongoose.model("item", clothingItemSchema);
+module.exports = mongoose.model("clothingItem", clothingItemSchema);
