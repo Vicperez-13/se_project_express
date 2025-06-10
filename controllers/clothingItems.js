@@ -26,7 +26,7 @@ const getItems = (req, res) => {
   clothingItem
     .find({})
     .then((items) => res.status(200).send(items))
-    .catch((err) => {
+    .catch(() => {
       res
         .status(INTERNAL_SERVER_ERROR)
         .send({ message: "An error has occurred on the server" });
@@ -75,7 +75,7 @@ const deleteItem = (req, res) => {
   clothingItem
     .findByIdAndDelete(itemId)
     .orFail()
-    .then((item) => res.status(200).send({}))
+    .then(() => res.status(200).send({}))
     .catch((err) => {
       res.status(BAD_REQUEST).send({ message: err.message });
     });

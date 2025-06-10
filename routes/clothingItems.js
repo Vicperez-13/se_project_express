@@ -4,7 +4,6 @@ const { addLike, removeLike } = require("../controllers/clothingItems");
 const {
   createItem,
   getItems,
-  updateItem,
   deleteItem,
 } = require("../controllers/clothingItems");
 
