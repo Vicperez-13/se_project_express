@@ -9,16 +9,16 @@ const createItem = (req, res) => {
   console.log(req);
   console.log(req.body);
 
-  const { name, weather, imageURL } = req.body;
+  const { name, weather, imageUrl } = req.body;
 
   clothingItem
-    .create({ name, weather, imageURL })
+    .create({ name, weather, imageUrl, owner: req.user._id })
     .then((item) => {
       console.log(item);
       res.send({ data: item });
     })
     .catch((err) => {
-      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+      res.status(BAD_REQUEST).send({ message: err.message });
     });
 };
 
@@ -27,7 +27,30 @@ const getItems = (req, res) => {
     .find({})
     .then((items) => res.status(200).send(items))
     .catch((err) => {
-      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+      res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
+    });
+};
+
+const addLike = (req, res) => {
+  const { itemId } = req.params;
+  const { userId } = req.body;
+  clothingItem
+    .findByIdAndUpdate(itemId, { $addToSet: { likes: userId } }, { new: true })
+    .then((items) => res.status(200).send(items))
+    .catch((err) => {
+      res.status(NOT_FOUND).send({ message: err.message });
+    });
+};
+const removeLike = (req, res) => {
+  const { itemId } = req.params;
+  const { userId } = req.body;
+  clothingItem
+    .findByIdAndUpdate(itemId, { $pull: { likes: userId } }, { new: true })
+    .then((items) => res.status(200).send(items))
+    .catch((err) => {
+      res.status(NOT_FOUND).send({ message: err.message });
     });
 };
 
@@ -39,7 +62,7 @@ const updateItem = (req, res) => {
     .findByIdAndUpdate(itemId, { $set: { imageURL } })
     .orFail()
     .then((item) => res.status(200).send({ data: item }))
-    .catech((err) => {
+    .catch((err) => {
       res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     });
 };
@@ -52,10 +75,17 @@ const deleteItem = (req, res) => {
   clothingItem
     .findByIdAndDelete(itemId)
     .orFail()
-    .then((itme) => res.status(204).send({}))
+    .then((item) => res.status(200).send({}))
     .catch((err) => {
-      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+      res.status(BAD_REQUEST).send({ message: err.message });
     });
 };
 
-module.exports = { createItem, getItems, updateItem, deleteItem };
+module.exports = {
+  createItem,
+  getItems,
+  updateItem,
+  deleteItem,
+  addLike,
+  removeLike,
+};
