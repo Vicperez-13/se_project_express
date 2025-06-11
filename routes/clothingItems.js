@@ -7,16 +7,16 @@ const {
   deleteItem,
 } = require("../controllers/clothingItems");
 
-//CRUD
+// CRUD
 
-//CREATE
+// CREATE
 router.post("/", createItem);
 
-//READ
+// READ
 
 router.get("/", getItems);
 
-//DELETE
+// DELETE
 router.delete("/:itemId", deleteItem);
 
 // Like an item
