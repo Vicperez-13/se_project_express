@@ -1,9 +1,42 @@
-# WTWR (What to Wear?): Back End
-The back-end project is focused on creating a server for the WTWR application. You’ll gain a deeper understanding of how to work with databases, set up security and testing, and deploy web applications on a remote machine. The eventual goal is to create a server with an API and user authorization.
-## Running the Project
-`npm run start` — to launch the server 
+WTWR (What to Wear) Back-End Server
+Welcome to the What to Wear back-end server! This project provides the foundation for a weather-based clothing recommendation application, helping users decide what to wear based on current weather conditions.
+📌 Main Purpose
+This server enables users to store clothing items, categorize them by weather type, and interact with other users' items through likes. It is built using Node.js, Express.js, and MongoDB for efficient and scalable data management.
+🔑 Key Features
+User Management
 
-`npm run dev` — to launch the server with the hot reload feature
-
-### Testing
-Before committing your code, make sure you edit the file `sprint.txt` in the root folder. The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 12
+- Allows users to create and manage their profiles, including names and avatars.
+- Provides API endpoints for handling user data.
+  Clothing Items Management
+- Stores clothing items with details like name, weather type (hot/warm/cold), and images.
+- Each item is associated with an owner (user).
+- Enables users to "like" clothing items.
+- Tracks item creation dates.
+  Database Integration
+- Utilizes MongoDB to store all user and clothing data.
+- Connects to a local MongoDB instance for data persistence.
+  API Structure
+- Implements RESTful routes for users and clothing items.
+- Includes proper error handling to ensure reliability.
+- Runs an Express.js server on port 3001.
+  🛠️ Technologies Used
+  Core Technologies
+- Node.js – JavaScript runtime environment.
+- Express.js – Web framework for creating the server and API routes.
+- MongoDB – NoSQL database for storing user and clothing item data.
+- Mongoose – ODM (Object Document Mapper) for MongoDB, version 8.9.5+.
+  Development Tools
+- ESLint – Code linting and formatting tool.
+- Nodemon – Development tool for hot reload (auto-restart server on file changes).
+- Validator – Package for URL validation in schemas.
+  Project Structure
+- MVC Architecture – Models, Views (routes), Controllers pattern.
+- RESTful API – Following REST principles for API endpoints.
+  Key Packages
+- mongoose@^8.9.5 – For database connection and schemas.
+- validator – For URL validation.
+- nodemon – As a dev dependency for hot reload.
+- eslint – For code quality.
+  ⚡ Server Configuration
+- The server runs on port 3001.
+- Connects to a local MongoDB instance at: mongodb://127.0.0.1:27017/wtwr_db.
