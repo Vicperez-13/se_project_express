@@ -1,8 +1,13 @@
-WTWR (What to Wear) Back-End Server
-Welcome to the What to Wear back-end server! This project provides the foundation for a weather-based clothing recommendation application, helping users decide what to wear based on current weather conditions.
-📌 Main Purpose
+# WTWR (What to Wear) Back-End Server
+
+- Welcome to the What to Wear back-end server! This project provides the foundation for a weather-based clothing recommendation application, helping users decide what to wear based on current weather conditions.
+
+# 📌 Main Purpose
+
 This server enables users to store clothing items, categorize them by weather type, and interact with other users' items through likes. It is built using Node.js, Express.js, and MongoDB for efficient and scalable data management.
-🔑 Key Features
+
+# 🔑 Key Features
+
 User Management
 
 - Allows users to create and manage their profiles, including names and avatars.
