@@ -4,11 +4,11 @@
 
 # 📌 Main Purpose
 
-This server enables users to store clothing items, categorize them by weather type, and interact with other users' items through likes. It is built using Node.js, Express.js, and MongoDB for efficient and scalable data management.
+- This server enables users to store clothing items, categorize them by weather type, and interact with other users' items through likes. It is built using Node.js, Express.js, and MongoDB for efficient and scalable data management.
 
 # 🔑 Key Features
 
-User Management
+## User Management
 
 - Allows users to create and manage their profiles, including names and avatars.
 - Provides API endpoints for handling user data.
