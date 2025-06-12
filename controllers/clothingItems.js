@@ -96,8 +96,13 @@ const deleteItem = (req, res) => {
     .then(() => res.status(200).send({ message: "Item deleted successfully" }))
     .catch((err) => {
       console.error(err);
-      if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid data" });
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(NOT_FOUND).send({ message: "user not found" });
+      }
+      if (err.name === "CastError") {
+        return res
+          .status(BAD_REQUEST)
+          .send({ message: "Invalid user ID format" });
       }
       return res
         .status(INTERNAL_SERVER_ERROR)
