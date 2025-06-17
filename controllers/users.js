@@ -8,6 +8,7 @@ const {
 // GET/users
 const getUsers = (req, res) => {
   User.find({})
+    .select("name avatar email")
     .then((users) => res.status(200).send(users))
     .catch((err) => {
       console.error(err);
@@ -18,10 +19,10 @@ const getUsers = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, avatar } = req.body;
+  const { name, avatar, email, password } = req.body;
 
-  User.create({ name, avatar })
-    .then((user) => res.status(201).send(user))
+  User.create({ name, avatar, email, password })
+    .then((user) => res.status(201).send("User created successfully"))
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
