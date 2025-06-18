@@ -1,8 +1,10 @@
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
 const {
   BAD_REQUEST,
   NOT_FOUND,
   INTERNAL_SERVER_ERROR,
+  CONFLICT,
 } = require("../utils/errors");
 
 // GET/users
@@ -21,12 +23,12 @@ const getUsers = (req, res) => {
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
-  User.create({ name, avatar, email, password })
+  User.create({ name, avatar, email, password: bcrypt.hashSync(password) })
     .then((user) => res.status(201).send("User created successfully"))
     .catch((err) => {
       console.error(err);
-      if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid data" });
+      if (err.code === 11000) {
+        return res.status(CONFLICT).send({ message: "Conflict error" });
       }
       return res
         .status(INTERNAL_SERVER_ERROR)

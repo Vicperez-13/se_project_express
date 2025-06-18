@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Vicperez-13/se_project_express#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "express": "^4.21.2",
     "mongoose": "^8.15.1",
     "nodemon": "^3.1.10",
