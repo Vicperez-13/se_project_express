@@ -1,10 +1,13 @@
 const User = require("../models/user");
+const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const {
   BAD_REQUEST,
   NOT_FOUND,
   INTERNAL_SERVER_ERROR,
   CONFLICT,
+  UNAUTHORIZED,
 } = require("../utils/errors");
 
 // GET/users
@@ -20,10 +23,38 @@ const getUsers = (req, res) => {
     });
 };
 
+const createLogin = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findUserByCredentials({ email, password })
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.status(200).send({ token });
+    })
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "AuthenticationError") {
+        return res
+          .status(UNAUTHORIZED)
+          .send({ message: "Invalid email or password" });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
+    });
+};
+
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
-  User.create({ name, avatar, email, password: bcrypt.hashSync(password) })
+  User.create({
+    name,
+    avatar,
+    email,
+    password: bcrypt.hashSync(password, 10),
+  })
     .then((user) => res.status(201).send("User created successfully"))
     .catch((err) => {
       console.error(err);
@@ -58,4 +89,4 @@ const getUser = (req, res) => {
     });
 };
 
-module.exports = { getUsers, createUser, getUser };
+module.exports = { getUsers, createUser, getUser, createLogin };

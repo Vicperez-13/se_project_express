@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const mainRouter = require("./routes/index");
+const { createUser, createLogin } = require("./controllers/users");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -20,6 +21,10 @@ app.use((req, res, next) => {
   };
   next();
 });
+
+app.post("/signin", createLogin);
+
+app.post("/signup", createUser);
 
 app.use("/", mainRouter);
 
