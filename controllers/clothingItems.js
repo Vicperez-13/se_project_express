@@ -87,13 +87,31 @@ const removeLike = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
+  const userId = req.user._id;
 
   console.log(itemId);
 
   clothingItem
-    .findByIdAndDelete(itemId)
+    .findById(itemId)
     .orFail()
-    .then(() => res.status(200).send({ message: "Item deleted successfully" }))
+    .then((item) => {
+      if (item.owner.toString() === userId.toString()) {
+        return clothingItem
+          .findByIdAndDelete(itemId)
+          .then(() =>
+            res.status(200).send({ message: "Item deleted successfully" })
+          )
+          .catch((err) => {
+            console.error(err);
+            return res
+              .status(INTERNAL_SERVER_ERROR)
+              .send({ message: "An error has occurred on the server" });
+          });
+      }
+      return res
+        .status(403)
+        .send({ message: "You are not authorized to delete this item" });
+    })
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {

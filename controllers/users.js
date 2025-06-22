@@ -27,7 +27,9 @@ const getUsers = (req, res) => {
 const createLogin = (req, res) => {
   const { email, password } = req.body;
 
-  User.findUserByCredentials({ email, password })
+  User.findUserByCredentials({ email, password });
+  User.findOne({ email })
+    .select("+password")
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
         expiresIn: "7d",
@@ -56,7 +58,11 @@ const createUser = (req, res) => {
     email,
     password: bcrypt.hashSync(password, 10),
   })
-    .then((user) => res.status(201).send("User created successfully"))
+    .then((user) =>
+      res
+        .status(201)
+        .send({ name: user.name, avatar: user.avatar, email: user.email })
+    )
     .catch((err) => {
       console.error(err);
       if (err.code === 11000) {
@@ -121,4 +127,5 @@ module.exports = {
   getCurrentUser,
   createLogin,
   updateUser,
+  // findUserByCredentials,
 };
