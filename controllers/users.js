@@ -9,6 +9,7 @@ const {
   CONFLICT,
   UNAUTHORIZED,
 } = require("../utils/errors");
+const user = require("../models/user");
 
 // GET/users
 const getUsers = (req, res) => {
@@ -67,10 +68,35 @@ const createUser = (req, res) => {
     });
 };
 
-const getUser = (req, res) => {
-  const { userId } = req.params;
+const updateUser = (req, res) => {
+  const { name, avatar } = req.body;
+  const { _id } = req.user;
+  User.findByIdAndUpdate(
+    _id,
+    { name, avatar },
+    { new: true, runValidators: true }
+  )
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(NOT_FOUND).send({ message: "user not found" });
+      }
+      if (err.name === "CastError") {
+        return res
+          .status(BAD_REQUEST)
+          .send({ message: "Invalid user ID format" });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
+    });
+};
 
-  User.findById(userId)
+const getCurrentUser = (req, res) => {
+  const { _id } = req.user;
+
+  User.findById(_id)
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
@@ -89,4 +115,10 @@ const getUser = (req, res) => {
     });
 };
 
-module.exports = { getUsers, createUser, getUser, createLogin };
+module.exports = {
+  getUsers,
+  createUser,
+  getCurrentUser,
+  createLogin,
+  updateUser,
+};

@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const mainRouter = require("./routes/index");
-const { createUser, createLogin } = require("./controllers/users");
+const { createUser, createLogin, updateUser } = require("./controllers/users");
+const authorization = require("./middlewares/auth.js");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -15,16 +16,13 @@ mongoose
 
 app.use(express.json());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: "5d8b8592978f8bd833ca8133",
-  };
-  next();
-});
-
 app.post("/signin", createLogin);
 
 app.post("/signup", createUser);
+
+app.use(authorization);
+
+app.patch("/users/me", updateUser);
 
 app.use("/", mainRouter);
 
