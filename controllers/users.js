@@ -1,7 +1,6 @@
-const User = require("../models/user");
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
 const {
   BAD_REQUEST,
   NOT_FOUND,
@@ -9,31 +8,19 @@ const {
   CONFLICT,
   UNAUTHORIZED,
 } = require("../utils/errors");
-const user = require("../models/user");
-
-// GET/users
-const getUsers = (req, res) => {
-  User.find({})
-    .select("name avatar email")
-    .then((users) => res.status(200).send(users))
-    .catch((err) => {
-      console.error(err);
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server" });
-    });
-};
 
 const createLogin = (req, res) => {
   const { email, password } = req.body;
 
-  User.findUserByCredentials({ email, password });
-  User.findOne({ email })
-    .select("+password")
+  User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "7d",
-      });
+      const token = jwt.sign(
+        { _id: user._id },
+        process.env.JWT_SECRET || "default value",
+        {
+          expiresIn: "7d",
+        }
+      );
       res.status(200).send({ token });
     })
     .catch((err) => {
@@ -68,6 +55,9 @@ const createUser = (req, res) => {
       if (err.code === 11000) {
         return res.status(CONFLICT).send({ message: "Conflict error" });
       }
+      if (err.name === "ValidationError") {
+        return res.status(BAD_REQUEST).send({ message: "Invalid data" });
+      }
       return res
         .status(INTERNAL_SERVER_ERROR)
         .send({ message: "An error has occurred on the server" });
@@ -88,11 +78,15 @@ const updateUser = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "user not found" });
       }
+      if (err.name === "ValidationError") {
+        return res.status(BAD_REQUEST).send({ message: "Invalid data" });
+      }
       if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST)
           .send({ message: "Invalid user ID format" });
       }
+
       return res
         .status(INTERNAL_SERVER_ERROR)
         .send({ message: "An error has occurred on the server" });
@@ -122,10 +116,8 @@ const getCurrentUser = (req, res) => {
 };
 
 module.exports = {
-  getUsers,
   createUser,
   getCurrentUser,
   createLogin,
   updateUser,
-  // findUserByCredentials,
 };

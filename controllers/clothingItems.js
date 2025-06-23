@@ -3,6 +3,7 @@ const {
   BAD_REQUEST,
   NOT_FOUND,
   INTERNAL_SERVER_ERROR,
+  FORBIDDEN,
 } = require("../utils/errors");
 
 const createItem = (req, res) => {
@@ -109,7 +110,7 @@ const deleteItem = (req, res) => {
           });
       }
       return res
-        .status(403)
+        .status(FORBIDDEN)
         .send({ message: "You are not authorized to delete this item" });
     })
     .catch((err) => {

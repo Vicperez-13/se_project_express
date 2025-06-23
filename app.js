@@ -2,8 +2,7 @@ const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
 const mainRouter = require("./routes/index");
-const { createUser, createLogin, updateUser } = require("./controllers/users");
-const authorization = require("./middlewares/auth.js");
+const { createUser, createLogin } = require("./controllers/users");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -21,10 +20,6 @@ app.use(cors());
 app.post("/signin", createLogin);
 
 app.post("/signup", createUser);
-
-app.use(authorization);
-
-app.patch("/users/me", updateUser);
 
 app.use("/", mainRouter);
 
