@@ -25,7 +25,7 @@ const createLogin = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      if (err.name === "AuthenticationError") {
+      if (err.message === "AuthenticationError") {
         return res
           .status(UNAUTHORIZED)
           .send({ message: "Invalid email or password" });

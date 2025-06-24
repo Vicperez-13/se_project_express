@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const { JWT_SECRET } = process.env || "default value";
+const { JWT_SECRET = "default value" } = process.env;
 const { UNAUTHORIZED } = require("../utils/errors");
 
 function authorization(req, res, next) {
