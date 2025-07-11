@@ -21,7 +21,15 @@ const createLogin = (req, res) => {
           expiresIn: "7d",
         }
       );
-      res.status(200).send({ token });
+      res.status(200).send({
+        token,
+        user: {
+          name: user.name,
+          avatar: user.avatar,
+          email: user.email,
+          _id: user._id,
+        },
+      });
     })
     .catch((err) => {
       console.error(err);
@@ -45,11 +53,24 @@ const createUser = (req, res) => {
     email,
     password: bcrypt.hashSync(password, 10),
   })
-    .then((user) =>
-      res
-        .status(201)
-        .send({ name: user.name, avatar: user.avatar, email: user.email })
-    )
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        process.env.JWT_SECRET || "default value",
+        {
+          expiresIn: "7d",
+        }
+      );
+      res.status(201).send({
+        token,
+        user: {
+          name: user.name,
+          avatar: user.avatar,
+          email: user.email,
+          _id: user._id,
+        },
+      });
+    })
     .catch((err) => {
       console.error(err);
       if (err.code === 11000) {
