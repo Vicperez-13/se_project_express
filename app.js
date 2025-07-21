@@ -37,6 +37,7 @@ app.get("/health", (req, res) => {
     timestamp: new Date(),
     uptime: process.uptime(),
     service: "wear-wtwr backend",
+    version: "2025-07-21-production",
   });
 });
 
