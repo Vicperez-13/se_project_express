@@ -7,7 +7,11 @@ const userRouter = require("./users");
 router.use("/items", clothingItem);
 router.use("/users", userRouter);
 
-router.use((req, res) => {
+router.use("/items/*", (req, res) => {
+  res.status(NOT_FOUND).send({ message: "Router not found" });
+});
+
+router.use("/users/*", (req, res) => {
   res.status(NOT_FOUND).send({ message: "Router not found" });
 });
 

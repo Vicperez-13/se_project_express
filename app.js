@@ -27,6 +27,19 @@ app.post("/signin", createLogin);
 
 app.post("/signup", createUser);
 
+app.get("/", (req, res) => {
+  res.json({ message: "API is live!" });
+});
+
+app.get("/health", (req, res) => {
+  res.json({
+    status: "ok",
+    timestamp: new Date(),
+    uptime: process.uptime(),
+    service: "wear-wtwr backend",
+  });
+});
+
 app.use("/", mainRouter);
 
 app.use(errorLogger);
