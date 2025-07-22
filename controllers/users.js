@@ -12,27 +12,22 @@ const {
 const createLogin = (req, res, next) => {
   const { email, password } = req.body;
 
-  User.findUserByCredentials(email, password)
+  if (!email || !password) {
+    return next(new BadRequestError("Email and password are required"));
+  }
+
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      res.status(200).send({
-        token,
-        user: {
-          name: user.name,
-          avatar: user.avatar,
-          email: user.email,
-          _id: user._id,
-        },
-      });
+      return res.status(200).send({ token });
     })
     .catch((err) => {
       if (err.message === "AuthenticationError") {
-        next(new UnauthorizedError("Invalid email or password"));
-      } else {
-        next(err);
+        return next(new UnauthorizedError("Invalid email or password"));
       }
+      return next(err);
     });
 };
 
@@ -46,27 +41,18 @@ const createUser = (req, res, next) => {
     password: bcrypt.hashSync(password, 10),
   })
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-        expiresIn: "7d",
-      });
-      res.status(201).send({
-        token,
-        user: {
-          name: user.name,
-          avatar: user.avatar,
-          email: user.email,
-          _id: user._id,
-        },
-      });
+      const userObj = user.toObject();
+      delete userObj.password;
+      return res.status(201).send(userObj);
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError("User already exists"));
-      } else if (err.name === "ValidationError") {
-        next(new BadRequestError("Invalid data"));
-      } else {
-        next(err);
+        return next(new ConflictError("User already exists"));
       }
+      if (err.name === "ValidationError") {
+        return next(new BadRequestError("Invalid data"));
+      }
+      return next(err);
     });
 };
 

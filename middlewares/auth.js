@@ -1,13 +1,13 @@
 const jwt = require("jsonwebtoken");
 
 const { JWT_SECRET } = require("../utils/config");
-const { UNAUTHORIZED } = require("../utils/errors");
+const { UnauthorizedError } = require("../errors");
 
 function authorization(req, res, next) {
   try {
     const { authorization: authHeader } = req.headers;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(UNAUTHORIZED).send({ message: "Unauthorized" });
+      return next(new UnauthorizedError("Unauthorized"));
     }
     const token = authHeader.replace("Bearer ", "");
     const payload = jwt.verify(token, JWT_SECRET);
@@ -18,7 +18,7 @@ function authorization(req, res, next) {
       err.name === "DocumentNotFoundError" ||
       err.name === "JsonWebTokenError"
     ) {
-      return res.status(UNAUTHORIZED).send({ message: "Unauthorized" });
+      return next(new UnauthorizedError("Unauthorized"));
     }
     return next(err);
   }

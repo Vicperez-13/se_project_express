@@ -5,6 +5,10 @@ const { errors } = require("celebrate");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 const mainRouter = require("./routes/index");
 const { createUser, createLogin } = require("./controllers/users");
+const {
+  validateCreateUser,
+  validateUserLogin,
+} = require("./middlewares/validation");
 const errorHandler = require("./middlewares/error-handler");
 require("dotenv").config();
 
@@ -29,9 +33,9 @@ app.get("/crash-test", () => {
   }, 0);
 });
 
-app.post("/signin", createLogin);
+app.post("/signin", validateUserLogin, createLogin);
 
-app.post("/signup", createUser);
+app.post("/signup", validateCreateUser, createUser);
 
 app.get("/", (req, res) => {
   res.json({ message: "API is live!" });

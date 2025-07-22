@@ -2,7 +2,6 @@ const clothingItem = require("../models/clothingItem");
 const BadRequestError = require("../errors/BadRequestError");
 const NotFoundError = require("../errors/NotFoundError");
 const ForbiddenError = require("../errors/ForbiddenError");
-const InternalServerError = require("../errors/InternalServerError");
 
 const createItem = (req, res, next) => {
   console.log(req);
